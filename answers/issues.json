@@ -1,0 +1,105 @@
+{
+  "as_of": "2026-09-16T12:00:00+00:00",
+  "count": 11,
+  "issues": [
+    {
+      "type": "conflicting_operator_team",
+      "severity": "medium",
+      "detail": "EC2 i-00000000000000101 (111111111111/us-east-1) has disagreeing operator_team statements: ['team-legacy-platform', 'team-platform'].",
+      "evidence": [
+        "aws_inventory.json#aws-acme-prod-20260916T115000Z/instances[0]/i-00000000000000101",
+        "terraform_state/acme-production.json#tf-acme-prod-20260902T090000Z/resources[0]/module.workers.aws_instance.pool[0]"
+      ],
+      "resolved_by": "an authoritative operator source, or a fresh Terraform state if the tag simply lagged."
+    },
+    {
+      "type": "cross_tenant_identifier_collision",
+      "severity": "medium",
+      "detail": "EC2 i-00000000000000101 appears under tenants ['acme', 'bravo'] in the same AWS account 111111111111; kept as distinct entities because tenant context is authoritative from the manifest.",
+      "evidence": [
+        "aws_inventory.json#aws-acme-prod-20260916T115000Z/instances[0]/i-00000000000000101",
+        "aws_inventory.json#aws-bravo-prod-20260916T115200Z/instances[0]/i-00000000000000101"
+      ],
+      "resolved_by": "confirmation that the shared account is intentional; provider account is not the tenant."
+    },
+    {
+      "type": "declared_workload_not_observed",
+      "severity": "low",
+      "detail": "Catalog app svc-payments-prod declares deployment bravo-prod/production/payments-api, but that cluster's k8s collection is unavailable (UNKNOWN, not absent).",
+      "evidence": [
+        "service_catalog.csv#catalog-bravo-20260916T114500Z/row[4]/svc-payments-prod"
+      ],
+      "resolved_by": "n/a if intentionally undeployed; otherwise the k8s collection for that cluster."
+    },
+    {
+      "type": "declared_workload_not_observed",
+      "severity": "medium",
+      "detail": "Catalog app svc-reports-prod declares deployment acme-prod/production/reports-api, which is absent from a complete, available k8s collection (likely truly not deployed).",
+      "evidence": [
+        "service_catalog.csv#catalog-acme-20260916T114000Z/row[2]/svc-reports-prod"
+      ],
+      "resolved_by": "n/a if intentionally undeployed; otherwise the k8s collection for that cluster."
+    },
+    {
+      "type": "duplicate_name_or_ip",
+      "severity": "low",
+      "detail": "Instances ['i-00000000000000101', 'i-00000000000000201'] share Name 'worker-a' and IP 10.0.4.118 but are distinct (different InstanceId/VPC); name and IP are not identity.",
+      "evidence": [
+        "aws_inventory.json#aws-acme-prod-20260916T115000Z/instances[0]/i-00000000000000101",
+        "aws_inventory.json#aws-acme-staging-20260916T115000Z/instances[0]/i-00000000000000201"
+      ],
+      "resolved_by": "n/a (correct behaviour); identity is the InstanceId within account/region."
+    },
+    {
+      "type": "duplicate_name_or_ip",
+      "severity": "low",
+      "detail": "Instances ['i-00000000000000104', 'i-00000000000000105'] share Name 'batch-runner' and IP 10.0.9.9 but are distinct (different InstanceId/VPC); name and IP are not identity.",
+      "evidence": [
+        "aws_inventory.json#aws-acme-prod-20260916T115000Z/instances[3]/i-00000000000000104",
+        "aws_inventory.json#aws-acme-prod-20260916T115000Z/instances[4]/i-00000000000000105"
+      ],
+      "resolved_by": "n/a (correct behaviour); identity is the InstanceId within account/region."
+    },
+    {
+      "type": "managed_without_inventory",
+      "severity": "medium",
+      "detail": "EC2 i-00000000000000099 (111111111111/us-east-1) is Terraform-managed but no matching instance is in the supplied inventory scope; it may be terminated/replaced (the state is stale) or out of scope.",
+      "evidence": [
+        "terraform_state/acme-production.json#tf-acme-prod-20260902T090000Z/resources[2]/module.ops.aws_instance.toolbox"
+      ],
+      "resolved_by": "a fresh inventory including terminated instances, or a fresh state."
+    },
+    {
+      "type": "misleading_name_similarity",
+      "severity": "low",
+      "detail": "EC2 i-00000000000000103 has Name tag 'payments-api' matching a catalog service; a Name tag is a label, not identity, and is not used to link the instance to that application.",
+      "evidence": [
+        "aws_inventory.json#aws-acme-prod-20260916T115000Z/instances[2]/i-00000000000000103"
+      ],
+      "resolved_by": "n/a (correct behaviour); identity is resolved via workload->node->providerID."
+    },
+    {
+      "type": "stale_collection",
+      "severity": "high",
+      "detail": "tf-acme-prod-20260902T090000Z (terraform) observed 2026-09-02T09:00:00+00:00 is past its freshness budget at as_of; its values describe the past, not necessarily now.",
+      "evidence": [
+        "terraform_state/acme-production.json"
+      ],
+      "resolved_by": "a fresher export of this collection within its freshness budget."
+    },
+    {
+      "type": "unavailable_collection",
+      "severity": "medium",
+      "detail": "k8s-bravo-prod-20260916 (kubernetes, tenant bravo) was not provided; questions needing it must answer UNKNOWN, not 'none'.",
+      "evidence": [],
+      "resolved_by": "supplying this collection's payload."
+    },
+    {
+      "type": "unavailable_collection",
+      "severity": "medium",
+      "detail": "tf-bravo-prod-20260916 (terraform, tenant bravo) was not provided; questions needing it must answer UNKNOWN, not 'none'.",
+      "evidence": [],
+      "resolved_by": "supplying this collection's payload."
+    }
+  ]
+}

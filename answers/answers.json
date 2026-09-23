@@ -1,0 +1,299 @@
+{
+  "question_a": {
+    "question": "A. Running production EC2 instances and their Terraform managed-binding evidence",
+    "query": {
+      "tenant_id": "acme",
+      "environment": "prod",
+      "as_of": "2026-09-16T12:00:00+00:00"
+    },
+    "terraform_evidence_scope": [
+      {
+        "source_instance_id": "tf-acme-prod",
+        "workspace_id": "acme-prod-core",
+        "status": "success",
+        "observed_at": "2026-09-02T09:00:00+00:00",
+        "stale": true
+      }
+    ],
+    "summary_counts": {
+      "managed_binding_found": 2,
+      "no_managed_binding__data_reference_present": 1,
+      "no_binding_found_in_supplied_scope": 2
+    },
+    "instances": [
+      {
+        "instance_id": "i-00000000000000101",
+        "identity_key": "ec2|acme|111111111111|us-east-1|i-00000000000000101",
+        "state": "running",
+        "aws_evidence": {
+          "snapshot_id": "aws-acme-prod-20260916T115000Z",
+          "locator": "aws_inventory.json#aws-acme-prod-20260916T115000Z/instances[0]/i-00000000000000101",
+          "observed_at": "2026-09-16T11:50:00+00:00"
+        },
+        "binding_status": "managed_binding_found",
+        "terraform_evidence": [
+          {
+            "mode": "managed",
+            "address": "module.workers.aws_instance.pool[0]",
+            "workspace_id": "acme-prod-core",
+            "source_instance_id": "tf-acme-prod",
+            "observed_at": "2026-09-02T09:00:00+00:00",
+            "stale": true,
+            "ref": "terraform_state/acme-production.json#tf-acme-prod-20260902T090000Z/resources[0]/module.workers.aws_instance.pool[0]"
+          }
+        ],
+        "interpretation": "A managed binding exists in the supplied state; because that state is STALE (past its freshness budget), this establishes management as of the state's observation time, not current management."
+      },
+      {
+        "instance_id": "i-00000000000000102",
+        "identity_key": "ec2|acme|111111111111|us-east-1|i-00000000000000102",
+        "state": "running",
+        "aws_evidence": {
+          "snapshot_id": "aws-acme-prod-20260916T115000Z",
+          "locator": "aws_inventory.json#aws-acme-prod-20260916T115000Z/instances[1]/i-00000000000000102",
+          "observed_at": "2026-09-16T11:50:00+00:00"
+        },
+        "binding_status": "managed_binding_found",
+        "terraform_evidence": [
+          {
+            "mode": "managed",
+            "address": "module.workers.aws_instance.pool[1]",
+            "workspace_id": "acme-prod-core",
+            "source_instance_id": "tf-acme-prod",
+            "observed_at": "2026-09-02T09:00:00+00:00",
+            "stale": true,
+            "ref": "terraform_state/acme-production.json#tf-acme-prod-20260902T090000Z/resources[1]/module.workers.aws_instance.pool[1]"
+          }
+        ],
+        "interpretation": "A managed binding exists in the supplied state; because that state is STALE (past its freshness budget), this establishes management as of the state's observation time, not current management."
+      },
+      {
+        "instance_id": "i-00000000000000103",
+        "identity_key": "ec2|acme|111111111111|us-east-1|i-00000000000000103",
+        "state": "running",
+        "aws_evidence": {
+          "snapshot_id": "aws-acme-prod-20260916T115000Z",
+          "locator": "aws_inventory.json#aws-acme-prod-20260916T115000Z/instances[2]/i-00000000000000103",
+          "observed_at": "2026-09-16T11:50:00+00:00"
+        },
+        "binding_status": "no_managed_binding__data_reference_present",
+        "terraform_evidence": [
+          {
+            "mode": "data",
+            "address": "data.aws_instance.lookup",
+            "workspace_id": "acme-prod-core",
+            "source_instance_id": "tf-acme-prod",
+            "observed_at": "2026-09-02T09:00:00+00:00",
+            "stale": true,
+            "ref": "terraform_state/acme-production.json#tf-acme-prod-20260902T090000Z/resources[4]/data.aws_instance.lookup"
+          }
+        ],
+        "interpretation": "The instance is only READ by a Terraform data source, which does not manage it."
+      },
+      {
+        "instance_id": "i-00000000000000104",
+        "identity_key": "ec2|acme|111111111111|us-east-1|i-00000000000000104",
+        "state": "running",
+        "aws_evidence": {
+          "snapshot_id": "aws-acme-prod-20260916T115000Z",
+          "locator": "aws_inventory.json#aws-acme-prod-20260916T115000Z/instances[3]/i-00000000000000104",
+          "observed_at": "2026-09-16T11:50:00+00:00"
+        },
+        "binding_status": "no_binding_found_in_supplied_scope",
+        "terraform_evidence": [],
+        "interpretation": "No managed or data reference in the supplied workspace(s); this does not rule out management in workspaces not provided."
+      },
+      {
+        "instance_id": "i-00000000000000105",
+        "identity_key": "ec2|acme|111111111111|us-east-1|i-00000000000000105",
+        "state": "running",
+        "aws_evidence": {
+          "snapshot_id": "aws-acme-prod-20260916T115000Z",
+          "locator": "aws_inventory.json#aws-acme-prod-20260916T115000Z/instances[4]/i-00000000000000105",
+          "observed_at": "2026-09-16T11:50:00+00:00"
+        },
+        "binding_status": "no_binding_found_in_supplied_scope",
+        "terraform_evidence": [],
+        "interpretation": "No managed or data reference in the supplied workspace(s); this does not rule out management in workspaces not provided."
+      }
+    ],
+    "limitations": [
+      "Tenant scope is enforced from the manifest: instances under other tenants that share this AWS account are excluded and never merged.",
+      "Running-state is from AWS inventory (complete within its declared account/region/env scope).",
+      "The prod Terraform state is stale (past its freshness budget), so every 'binding found' reflects the state's observation time, not current state."
+    ]
+  },
+  "question_b": {
+    "question": "B. Application context and responsibility",
+    "query": {
+      "tenant_id": "acme",
+      "environment": "prod",
+      "application_name": "payments-api",
+      "as_of": "2026-09-16T12:00:00+00:00"
+    },
+    "application": {
+      "service_id": "svc-payments-prod",
+      "service_name": "payments-api",
+      "application_team_owner": "team-payments",
+      "source": {
+        "snapshot_id": "catalog-acme-20260916T114000Z",
+        "locator": "service_catalog.csv#catalog-acme-20260916T114000Z/row[0]/svc-payments-prod",
+        "observed_at": "2026-09-16T11:40:00+00:00"
+      }
+    },
+    "declared_dependency": {
+      "declared_dependency_arn": "arn:aws:rds:us-east-1:111111111111:db:payments-db",
+      "source": {
+        "snapshot_id": "catalog-acme-20260916T114000Z",
+        "locator": "service_catalog.csv#catalog-acme-20260916T114000Z/row[0]/svc-payments-prod",
+        "observed_at": "2026-09-16T11:40:00+00:00"
+      },
+      "resolved_identity": "rds|acme|111111111111|us-east-1|payments-db",
+      "present_in_inventory": true,
+      "evidence": {
+        "snapshot_id": "aws-acme-prod-20260916T115000Z",
+        "locator": "aws_inventory.json#aws-acme-prod-20260916T115000Z/databases[0]/payments-db",
+        "observed_at": "2026-09-16T11:50:00+00:00"
+      },
+      "operator_team_tag": "team-data-platform",
+      "stale": false
+    },
+    "runtime": {
+      "declared_workload": {
+        "cluster_id": "acme-prod",
+        "namespace": "production",
+        "deployment_name": "payments-api"
+      },
+      "path_to_cloud": [
+        {
+          "instance": "EC2 i-00000000000000101 (111111111111/us-east-1)",
+          "identity_key": "ec2|acme|111111111111|us-east-1|i-00000000000000101",
+          "chain": [
+            {
+              "from": "App svc-payments-prod",
+              "to": "Deployment payments-api (cluster acme-prod)",
+              "basis": "catalog declared workload",
+              "strength": "strong"
+            },
+            {
+              "from": "Deployment payments-api (cluster acme-prod)",
+              "to": "Pod payments-api-7c9d-a (cluster acme-prod)",
+              "basis": "k8s ownership (Deployment->ReplicaSet->Pod)",
+              "strength": "exact"
+            },
+            {
+              "from": "Pod payments-api-7c9d-a (cluster acme-prod)",
+              "to": "Node ip-10-0-4-118 (cluster acme-prod)",
+              "basis": "k8s Pod.nodeName",
+              "strength": "exact"
+            },
+            {
+              "from": "Node ip-10-0-4-118 (cluster acme-prod)",
+              "to": "EC2 i-00000000000000101 (111111111111/us-east-1)",
+              "basis": "k8s Node.providerID",
+              "strength": "exact"
+            }
+          ],
+          "overall_strength": "strong (the app->deployment hop is a catalog declaration; the rest is exact)",
+          "cloud_evidence": {
+            "snapshot_id": "aws-acme-prod-20260916T115000Z",
+            "locator": "aws_inventory.json#aws-acme-prod-20260916T115000Z/instances[0]/i-00000000000000101",
+            "observed_at": "2026-09-16T11:50:00+00:00"
+          }
+        },
+        {
+          "instance": "EC2 i-00000000000000102 (111111111111/us-east-1)",
+          "identity_key": "ec2|acme|111111111111|us-east-1|i-00000000000000102",
+          "chain": [
+            {
+              "from": "App svc-payments-prod",
+              "to": "Deployment payments-api (cluster acme-prod)",
+              "basis": "catalog declared workload",
+              "strength": "strong"
+            },
+            {
+              "from": "Deployment payments-api (cluster acme-prod)",
+              "to": "Pod payments-api-7c9d-b (cluster acme-prod)",
+              "basis": "k8s ownership (Deployment->ReplicaSet->Pod)",
+              "strength": "exact"
+            },
+            {
+              "from": "Pod payments-api-7c9d-b (cluster acme-prod)",
+              "to": "Node ip-10-0-4-119 (cluster acme-prod)",
+              "basis": "k8s Pod.nodeName",
+              "strength": "exact"
+            },
+            {
+              "from": "Node ip-10-0-4-119 (cluster acme-prod)",
+              "to": "EC2 i-00000000000000102 (111111111111/us-east-1)",
+              "basis": "k8s Node.providerID",
+              "strength": "exact"
+            }
+          ],
+          "overall_strength": "strong (the app->deployment hop is a catalog declaration; the rest is exact)",
+          "cloud_evidence": {
+            "snapshot_id": "aws-acme-prod-20260916T115000Z",
+            "locator": "aws_inventory.json#aws-acme-prod-20260916T115000Z/instances[1]/i-00000000000000102",
+            "observed_at": "2026-09-16T11:50:00+00:00"
+          }
+        }
+      ],
+      "path_stops": []
+    },
+    "infrastructure_operator_evidence": [
+      {
+        "instance": "EC2 i-00000000000000101 (111111111111/us-east-1)",
+        "statements": [
+          {
+            "operator_team": "team-platform",
+            "source": "aws tag",
+            "ref": "aws_inventory.json#aws-acme-prod-20260916T115000Z/instances[0]/i-00000000000000101",
+            "stale": false
+          },
+          {
+            "operator_team": "team-legacy-platform",
+            "source": "terraform tag",
+            "ref": "terraform_state/acme-production.json#tf-acme-prod-20260902T090000Z/resources[0]/module.workers.aws_instance.pool[0]",
+            "stale": true
+          }
+        ],
+        "conflict": true,
+        "note": "Sources disagree on the operator team."
+      },
+      {
+        "instance": "EC2 i-00000000000000102 (111111111111/us-east-1)",
+        "statements": [
+          {
+            "operator_team": "team-platform",
+            "source": "aws tag",
+            "ref": "aws_inventory.json#aws-acme-prod-20260916T115000Z/instances[1]/i-00000000000000102",
+            "stale": false
+          },
+          {
+            "operator_team": "team-platform",
+            "source": "terraform tag",
+            "ref": "terraform_state/acme-production.json#tf-acme-prod-20260902T090000Z/resources[1]/module.workers.aws_instance.pool[1]",
+            "stale": true
+          }
+        ],
+        "conflict": false,
+        "note": "Operator statements agree."
+      }
+    ],
+    "shared_infrastructure": [
+      {
+        "node": "Node ip-10-0-4-118 (cluster acme-prod)",
+        "also_hosts": [
+          "Pod billing-api-7c9d-a (cluster acme-prod)"
+        ]
+      }
+    ],
+    "limitations": [
+      "The app->deployment hop is a catalog declaration (strong), not a provider identifier; everything from the deployment down is exact.",
+      "Application team (catalog owner_team) is a responsibility statement; operator_team tags are a separate statement about infrastructure operation. A workload running on an instance does not make the app team the operator, nor the operator responsible for the app.",
+      "The EC2 instance whose Name tag is 'payments-api' is NOT on this path; identity comes from the workload->node->providerID chain, never from a Name tag. (It is only read by a Terraform data source.)",
+      "Operator-team evidence conflicts between AWS tags and (stale) Terraform tags for at least one instance; neither is treated as authoritative.",
+      "Some instances on this path also host other applications' pods (shared infrastructure), so instance-level responsibility is not app-specific."
+    ]
+  }
+}
